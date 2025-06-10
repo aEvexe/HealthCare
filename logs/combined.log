@@ -1,0 +1,33 @@
+2025-06-10T17:34:51.972Z [HEALTHSERVICE] error: Error rejimi
+2025-06-10T17:34:51.978Z [HEALTHSERVICE] info: Oddiy log
+2025-06-10T17:34:51.979Z [HEALTHSERVICE] error: Error rejimi
+2025-06-10T17:34:51.979Z [HEALTHSERVICE] warn: warn rejimi
+2025-06-10T17:34:51.979Z [HEALTHSERVICE] info: info rejimi
+2025-06-10T17:34:52.097Z [HEALTHSERVICE] error: unhandledRejection: Unhandled error. ('error: relation "public.logs" does not exist\n' +
+  '    at C:\\Users\\User\\Desktop\\healthService\\node_modules\\pg\\lib\\client.js:545:17\n' +
+  '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)')
+Error [ERR_UNHANDLED_ERROR]: Unhandled error. ('error: relation "public.logs" does not exist\n' +
+  '    at C:\\Users\\User\\Desktop\\healthService\\node_modules\\pg\\lib\\client.js:545:17\n' +
+  '    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)')
+    at DerivedLogger.emit (node:events:507:17)
+    at DerivedLogger.transportEvent (C:\Users\User\Desktop\healthService\node_modules\winston\lib\winston\logger.js:640:12)
+    at PostgresTransport.emit (node:events:530:35)
+    at C:\Users\User\Desktop\healthService\node_modules\@innova2\winston-pg\dist\postgres-transport.js:70:18
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-06-10T17:34:53.934Z [HEALTHSERVICE] error: Error rejimi
+2025-06-10T17:34:53.940Z [HEALTHSERVICE] info: Oddiy log
+2025-06-10T17:34:53.940Z [HEALTHSERVICE] error: Error rejimi
+2025-06-10T17:34:53.941Z [HEALTHSERVICE] warn: warn rejimi
+2025-06-10T17:34:53.943Z [HEALTHSERVICE] info: info rejimi
+2025-06-10T17:35:52.379Z [HEALTHSERVICE] error: Error rejimi
+2025-06-10T17:35:52.385Z [HEALTHSERVICE] info: App started
+2025-06-10T17:35:52.386Z [HEALTHSERVICE] warn: Warning test
+2025-06-10T17:35:52.386Z [HEALTHSERVICE] error: Error test
+2025-06-10T17:35:56.604Z [HEALTHSERVICE] error: Error rejimi
+2025-06-10T17:35:56.610Z [HEALTHSERVICE] info: App started
+2025-06-10T17:35:56.610Z [HEALTHSERVICE] warn: Warning test
+2025-06-10T17:35:56.611Z [HEALTHSERVICE] error: Error test
+2025-06-10T17:36:56.234Z [HEALTHSERVICE] error: Error rejimi
+2025-06-10T17:36:56.240Z [HEALTHSERVICE] info: App started
+2025-06-10T17:36:56.240Z [HEALTHSERVICE] warn: Warning test
+2025-06-10T17:36:56.241Z [HEALTHSERVICE] error: Error test
