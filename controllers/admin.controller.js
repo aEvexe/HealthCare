@@ -105,40 +105,6 @@ const remove = async (req, res) => {
   }
 };
 
-// const changePassword = async (req, res) => {
-//   try {
-//     const adminId = req.admin.id; 
-//     const { currentPassword, newPassword } = req.body;
-
-//     // Validate input
-//     if (!currentPassword || !newPassword) {
-//       return res.status(400).json({ message: "Both current and new passwords are required" });
-//     }
-
-//     // Find admin by ID
-//     const admin = await Admin.findByPk(adminId);
-//     if (!admin) {
-//       return res.status(404).json({ message: "Admin not found" });
-//     }
-
-//     // Compare current password with stored hashed password
-//     const isMatch = await bcrypt.compare(currentPassword, admin.hashed_password);
-//     if (!isMatch) {
-//       return res.status(401).json({ message: "Current password is incorrect" });
-//     }
-
-//     // Hash new password
-//     const hashedPassword = await bcrypt.hash(newPassword, config.bcrypt.saltRounds);
-//     admin.hashed_password = hashedPassword;
-//     await admin.save();
-
-//     return res.status(200).json({ message: "Password updated successfully" });
-//   } catch (error) {
-//     console.error("Change password error:", error);
-//     sendErrorResponse(error, res, 500);
-//   }
-// };
-
 const adminActivate = async (req, res) => {
   try {
     const { link } = req.params;
@@ -160,14 +126,11 @@ const adminActivate = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   create,
   getAll,
   getOne,
   update,
   remove,
-  // changePassword
   adminActivate
 };

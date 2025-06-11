@@ -4,6 +4,8 @@ const Service = require("../models/services.model");
 const Client = require("../models/client.model");
 const Owner = require("../models/owner.model");
 const Contract = require("../models/contract.model");
+const ServiceCat = require("../models/serviceCategory.model");
+const { Sequelize } = require("sequelize");
 
 const getServicesUsedInDateRange = async (req, res) => {
   try {
@@ -20,7 +22,7 @@ const getServicesUsedInDateRange = async (req, res) => {
 
     res.status(200).json({ appointments });
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -43,7 +45,7 @@ const getClientsUsedServicesInDateRange = async (req, res) => {
 
     res.status(200).json({ clients });
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
@@ -67,33 +69,55 @@ const getClientsCanceledInDateRange = async (req, res) => {
 
     res.status(200).json({ clients });
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
 
-const getTopOwnersByServiceName = async (req, res) => {
+const getTopOwnersByService = async (req, res) => {
   try {
-    const { serviceName } = req.query;
+    const serviceName = req.query.name;
 
-    const owners = await Owner.findAll({
+    if (!serviceName) {
+      return res.status(400).json({ message: "Service name is required" });
+    }
+
+    const results = await Appointment.findAll({
+      attributes: [
+        [Sequelize.col("service.owner.full_name"), "ownerName"],
+        [Sequelize.fn("COUNT", Sequelize.col("appointment.id")), "appointmentCount"],
+      ],
       include: [
         {
           model: Service,
-          where: { name: serviceName },
+          required: true,
+          attributes: [],
           include: [
             {
-              model: Appointment,
+              model: Owner,
+              attributes: [],
+              required: true,
+            },
+            {
+              model: ServiceCat,
+              where: { name: serviceName },
+              attributes: [],
+              required: true,
             },
           ],
         },
       ],
+      group: ["service.owner.id", "service.owner.full_name"],
+      order: [[Sequelize.literal(`COUNT("appointment"."id")`), "DESC"]],
+      raw: true,
     });
 
-    res.status(200).json({ owners });
+    res.status(200).json(results);
   } catch (error) {
-    sendErrorResponse(error, res);
+    console.error("Error fetching top owners:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 const getPaymentsByClient = async (req, res) => {
   try {
@@ -106,14 +130,16 @@ const getPaymentsByClient = async (req, res) => {
 
     res.status(200).json({ payments });
   } catch (error) {
-    sendErrorResponse(error, res);
+    sendErrorResponse(error, res, 400);
   }
 };
+
+
 
 module.exports = {
   getServicesUsedInDateRange,
   getClientsUsedServicesInDateRange,
   getClientsCanceledInDateRange,
-  getTopOwnersByServiceName,
+  getTopOwnersByService,
   getPaymentsByClient,
 };

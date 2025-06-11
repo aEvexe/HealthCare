@@ -5,7 +5,7 @@ const {
   getServicesUsedInDateRange,
   getClientsUsedServicesInDateRange,
   getClientsCanceledInDateRange,
-  getTopOwnersByServiceName,
+  getTopOwnersByService,
   getPaymentsByClient
 } = require("../controllers/analititcs.controller");
 
@@ -19,7 +19,7 @@ router.get("/clients-used", getClientsUsedServicesInDateRange);
 router.get("/clients-canceled", getClientsCanceledInDateRange);
 
 // 4. Top owners by service name
-router.get("/top-owners-by-service", getTopOwnersByServiceName);
+router.get("/top-owners", getTopOwnersByService);
 
 // 5. Payments made by a specific client
 router.get("/payments-by-client/:clientId", getPaymentsByClient);

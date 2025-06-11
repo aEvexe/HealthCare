@@ -1,4 +1,5 @@
  const ServiceCat = require("../models/serviceCategory.model");
+ const Status = require("../models/status.model");
 const { serviceCatSchema } = require("../validations/serviceCategory.validation");
 const { sendErrorResponse } = require("../helpers/send_error_res");
 
