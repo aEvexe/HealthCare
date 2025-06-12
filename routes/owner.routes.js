@@ -8,13 +8,14 @@ const {
   ownerActivate,
 } = require("../controllers/owner.controller");
 const ownerJwtGuard = require("../middlewares/guards/owner.jwt.guard");
-const adminJwtGuard = require("../middlewares/guards/admin-jwt.guard");
 const ownerSelfJwtGuard = require("../middlewares/guards/owner-self.jwt.guard");
+const adminJwtGuard = require("../middlewares/guards/SuperAdmin-jwt.guard");
+
 
 const router = express.Router();
 
 router.post("/", createOwner);
-router.get("/", adminJwtGuard, getAllOwners);
+router.get("/", adminJwtGuard, getAllOwners); 
 router.get("/activate/:link", ownerActivate);
 router.get("/:id", ownerJwtGuard, ownerSelfJwtGuard, getOwnerById);
 router.put("/:id", updatedOwner);

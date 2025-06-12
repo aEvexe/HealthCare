@@ -8,36 +8,52 @@ const {mailService} = require("../services/mail.service");
 
 const createClient = async (req, res) => {
   try {
+    // Validate input
     const { error, value } = clientSchema.validate(req.body);
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
     }
 
+    // Check if client already exists
     const existingClient = await Client.findOne({ where: { email: value.email } });
     if (existingClient) {
       return res.status(409).send({ message: "Client with this email already exists" });
     }
 
+    // Hash password
     const hashed_password = await bcrypt.hash(value.password, 10);
+
+    // Generate activation link
     const activation_link = uuid.v4();
+
+    // Create new client
     const newClient = await Client.create({
       full_name: value.full_name,
       email: value.email,
-      passport_number: value.passport_number,
       phone: value.phone,
+      passport: value.passport,
       birth_date: value.birth_date,
       address: value.address,
       hashed_password,
-      created_at: new Date().toISOString(),
       is_active: false,
       activation_link,
+      created_at: new Date(),
     });
-    const link = `${config.get(
-      "api_url"
-    )}/api/client/activate/${activation_link}`;
-    await mailService.sendMail(value.email, link);
 
-    res.status(201).send({ message: "Client created successfully", newClient });
+    // Prepare and send activation email
+    const activationUrl = `${config.get("api_url")}/api/client/activate/${activation_link}`;
+    await mailService.sendMail(value.email, activationUrl);
+
+    res.status(201).send({
+      message: "Client created successfully. Please check your email to activate your account.",
+      client: {
+        id: newClient.id,
+        full_name: newClient.full_name,
+        email: newClient.email,
+        phone: newClient.phone,
+        is_active: newClient.is_active,
+      },
+    });
   } catch (error) {
     sendErrorResponse(error, res, 400);
   }

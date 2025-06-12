@@ -61,7 +61,7 @@ const getClientsCanceledInDateRange = async (req, res) => {
             appointment_date: {
               [Op.between]: [from, to],
             },
-            statusId: 3, // assuming 3 = canceled
+            statusId: 1, // assuming 3 = canceled
           },
         },
       ],

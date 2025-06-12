@@ -1,6 +1,6 @@
 const { sendErrorResponse } = require("../helpers/send_error_res");
 const Admin = require("../models/admin.model");
-const config = require('config')
+const config = require("config");
 const bcrypt = require("bcrypt");
 const { AdminJwtServicee } = require("../services/jwt.service");
 
@@ -8,7 +8,7 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const admin = await Admin.findOne({
-      where: { email }
+      where: { email },
     });
 
     if (!admin) {
@@ -19,7 +19,10 @@ const login = async (req, res) => {
       );
     }
 
-    const verifyPassword = await bcrypt.compare(password, admin.hashed_password);
+    const verifyPassword = await bcrypt.compare(
+      password,
+      admin.hashed_password
+    );
     if (!verifyPassword) {
       return sendErrorResponse(
         { message: "password or email incorrect" },
@@ -31,6 +34,7 @@ const login = async (req, res) => {
     const payload = {
       id: admin.id,
       email: admin.email,
+      role: "admin",
     };
 
     const tokens = AdminJwtServicee.generateToken(payload);
@@ -63,7 +67,9 @@ const logout = async (req, res) => {
       );
     }
 
-    const decodedToken = await AdminJwtServicee.verifyRefreshToken(refreshToken);
+    const decodedToken = await AdminJwtServicee.verifyRefreshToken(
+      refreshToken
+    );
 
     const admin = await Admin.update(
       { hashed_token: null },
@@ -93,7 +99,9 @@ const refresh = async (req, res) => {
       );
     }
 
-    const decodedToken = await AdminJwtServicee.verifyRefreshToken(refreshToken);
+    const decodedToken = await AdminJwtServicee.verifyRefreshToken(
+      refreshToken
+    );
 
     const admin = await Admin.findByPk(decodedToken.id);
 

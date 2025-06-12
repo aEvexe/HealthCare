@@ -1,5 +1,6 @@
+// models/status.model.js
 const sequelize = require("../config/db");
-const { DataType, DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 
 const Status = sequelize.define(
   "status",
@@ -11,14 +12,18 @@ const Status = sequelize.define(
     },
     name: {
       type: DataTypes.STRING(50),
+      allowNull: false,
     },
     type: {
-      type: DataTypes.STRING(100), 
-      unique: true,
-    }
+      type: DataTypes.STRING(100),
+      allowNull: false, 
+    },
 
   },
-  { freezeTableName: true, timestamps: false }
+  {
+    freezeTableName: true,
+    timestamps: false,
+  },
 );
 
 module.exports = Status;

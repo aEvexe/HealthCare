@@ -9,9 +9,9 @@ const {
 } = require("../controllers/payments.controller");
 
 router.post("/", createPayment);
-router.get("/", getAllPayments);
-router.get("/:id", getPaymentById);
-router.put("/:id", updatePayment);
-router.delete("/:id", deletePayment);
+router.get("/", /*adminJwtGuard,*/ getAllPayments);
+router.get("/:id", /*adminJwtGuard,*/ getPaymentById);
+router.put("/:id", /*adminJwtGuard,*/ updatePayment);
+router.delete("/:id", /*adminJwtGuard,*/ deletePayment);
 
 module.exports = router;

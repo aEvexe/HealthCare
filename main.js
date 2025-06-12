@@ -19,15 +19,20 @@ app.use(express.json());
 app.use("/api", indexRoute)
 app.use(errorHandingMiddleware)
 
-async function start(){
-    try {
-        await sequelize.authenticate()
-        await sequelize.sync({alter: true})
-        app.listen(PORT, () => { 
-            console.log(`Server running at port http://localhost:${PORT}`)
-        })
-    } catch (error) {
-        console.log(error)
-    }
+async function start() {
+  try {
+    await sequelize.authenticate();
+    console.log("✅ DB connection established");
+
+    console.log("✅ Unique index on LOWER(name), type applied");
+
+    await sequelize.sync({ alter: true });
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("❌ Error starting app:", error);
+  }
 }
 start()

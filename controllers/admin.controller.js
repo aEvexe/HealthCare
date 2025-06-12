@@ -1,43 +1,38 @@
 const { sendErrorResponse } = require("../helpers/send_error_res");
 const bcrypt = require("bcrypt");
 const config = require("config");
-const crypto = require("crypto");
 const Admin = require("../models/admin.model");
 const { adminSchema } = require("../validations/admin.validation");
 const uuid = require("uuid");
-const {mailService} = require("../services/mail.service");
+const { mailService } = require("../services/mail.service");
 
 const create = async (req, res) => {
   try {
     const { error, value } = adminSchema.validate(req.body);
     if (error) {
-      return res.status(400).send({ message: error.details[0].message });
+      return res.status(400).json({ message: error.details[0].message });
     }
 
-    const existingAdmin = await Admin.findOne({ where: { email: value.email } });
-    if (existingAdmin) {
-      return res.status(409).send({ message: "Admin with this email already exists" });
+    const { name, email, password, role } = value;
+
+    const existing = await Admin.findOne({ where: { email } });
+    if (existing) {
+      return res.status(409).json({ message: "Admin with this email already exists." });
     }
 
-    const hashed_password = await bcrypt.hash(value.password, 10);
-    const activation_link = uuid.v4();
+    const hashed_password = await bcrypt.hash(password, 10);
+
     const newAdmin = await Admin.create({
-      name: value.name,
-      email: value.email,
+      name,
+      email,
       hashed_password,
-      created_at: new Date().toISOString(),
-      is_active: false,
-      activation_link,
+      role: role || "admin",
+      is_activee: true,
     });
-    const link = `${config.get(
-      "api_url"
-    )}/api/admin/activate/${activation_link}`;
-    await mailService.sendMail(value.email, link);
 
-
-    res.status(201).send({ message: "Admin created successfully", newAdmin });
+    res.status(201).json({ message: "Admin created", data: newAdmin });
   } catch (error) {
-    return sendErrorResponse(error, res, 400);
+    res.status(500).json({ message: "Error creating admin", error: error.message });
   }
 };
 
@@ -75,9 +70,19 @@ const getOne = async (req, res) => {
 
 const update = async (req, res) => {
   try {
+    const { error, value } = adminSchema.validate(req.body, { allowUnknown: true });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
     const { id } = req.params;
 
-    const [updated] = await Admin.update(req.body, { where: { id } });
+    if (value.password) {
+      value.hashed_password = await bcrypt.hash(value.password, 10);
+      delete value.password;
+    }
+
+    const [updated] = await Admin.update(value, { where: { id } });
 
     if (!updated) {
       return res.status(404).send({ message: "Admin not found" });
@@ -93,7 +98,7 @@ const update = async (req, res) => {
 const remove = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await Admin.destroy({ where: { id }, restartIdentity: true});
+    const deleted = await Admin.destroy({ where: { id }, restartIdentity: true });
 
     if (!deleted) {
       return res.status(404).send({ message: "Admin not found" });
@@ -108,7 +113,7 @@ const remove = async (req, res) => {
 const adminActivate = async (req, res) => {
   try {
     const { link } = req.params;
-    const admin = await Admin.findOne({ where: { activation_link: link } }); 
+    const admin = await Admin.findOne({ where: { activation_link: link } });
 
     if (!admin) {
       return res.status(400).send({ message: "Admin link noto'g'ri" });
@@ -132,5 +137,5 @@ module.exports = {
   getOne,
   update,
   remove,
-  adminActivate
+  adminActivate,
 };

@@ -13,7 +13,7 @@ const Admin = sequelize.define(
       type: DataTypes.STRING(50),
     },
     email: {
-      type: DataTypes.STRING(100), 
+      type: DataTypes.STRING(100),
       allowNull: false,
       unique: true,
       validate: {
@@ -21,11 +21,11 @@ const Admin = sequelize.define(
       },
     },
     hashed_password: {
-        type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
 
     hashed_token: {
-        type: DataTypes.STRING
+      type: DataTypes.STRING,
     },
     created_at: {
       type: DataTypes.STRING,
@@ -37,8 +37,7 @@ const Admin = sequelize.define(
     activation_link: {
       type: DataTypes.STRING,
       unique: true,
-    }
-
+    },
   },
   { freezeTableName: true, timestamps: false }
 );

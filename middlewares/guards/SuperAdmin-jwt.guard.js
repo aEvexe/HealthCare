@@ -4,25 +4,25 @@ const { AdminJwtServicee } = require("../../services/jwt.service");
 module.exports = async (req, res, next) => {
   try {
     const authorization = req.headers.authorization;
-    console.log(authorization);
-
     if (!authorization) {
       return res
-        .status(401)
-        .send({ message: "Authorization header not found" });
+      .status(401)
+      .send({ message: "Authorization header not found" });
     }
 
     const [bearer, token] = authorization.split(" ");
 
     if (bearer !== "Bearer" || !token) {
-      return res.status(401).send({ message: "Bearer token not found" });
+      return res.status(401).send({ message: "Invalid Bearer token" });
     }
 
     const decodedPayload = await AdminJwtServicee.verifyAccessToken(token);
 
-    console.log(req);
-    req.admin = decodedPayload;
+    if (!decodedPayload || decodedPayload.role !== "superadmin") {
+      return res.status(403).send({ message: "Only superadmin can perform this action." });
+    }
 
+    req.admin = decodedPayload;
     next();
   } catch (error) {
     sendErrorResponse(error, res, 400);

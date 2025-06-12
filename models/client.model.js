@@ -50,8 +50,8 @@ const Client = sequelize.define(
       type: DataTypes.STRING,
       unique: true,
     },
-    created_at: {
-      type: DataTypes.STRING,
+    created_at: { 
+      type: DataTypes.DATE,
     },
 
   },

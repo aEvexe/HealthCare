@@ -8,10 +8,10 @@ const {
   deleteServiceCat,
 } = require("../controllers/serviceCategpry.controller");
 
-router.post("/", createServiceCat);
-router.get("/", getAllServiceCat);
-router.get("/:id", getServiceCatById);
-router.put("/:id", updateServiceCat);
-router.delete("/:id", deleteServiceCat);
+router.post("/", /*adminJwtGuard,*/ createServiceCat);
+router.get("/", /*adminJwtGuard,*/ getAllServiceCat);
+router.get("/:id", /*adminJwtGuard,*/ getServiceCatById);
+router.put("/:id", /*adminJwtGuard,*/ updateServiceCat);
+router.delete("/:id", /*adminJwtGuard,*/ deleteServiceCat);
 
 module.exports = router;

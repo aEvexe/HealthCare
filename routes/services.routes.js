@@ -8,10 +8,10 @@ const {
   deleteService,
 } = require("../controllers/services.controller");
 
-router.post("/", createService);
-router.get("/", getAllServices);
-router.get("/:id", getServiceById);
-router.put("/:id", updateService);
-router.delete("/:id", deleteService);
+router.post("/", /*adminJwtGuard,*/ createService);
+router.get("/", /*adminJwtGuard,*/ getAllServices);
+router.get("/:id", /*adminJwtGuard,*/ getServiceById);
+router.put("/:id", /*adminJwtGuard,*/ updateService);
+router.delete("/:id", /*adminJwtGuard,*/ deleteService);
 
 module.exports = router;

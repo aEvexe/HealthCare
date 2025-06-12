@@ -6,39 +6,55 @@ const { sendErrorResponse } = require("../helpers/send_error_res");
 const uuid = require("uuid");
 const { mailService } = require("../services/mail.service");
 
+
 const createOwner = async (req, res) => {
   try {
+    // Validate input
     const { error, value } = ownerSchema.validate(req.body);
     if (error) {
       return res.status(400).send({ message: error.details[0].message });
     }
 
-    const existingOwner = await Owner.findOne({
-      where: { email: value.email },
-    });
+    // Check if owner already exists
+    const existingOwner = await Owner.findOne({ where: { email: value.email } });
     if (existingOwner) {
-      return res
-        .status(409)
-        .send({ message: "Owner with this email already exists" });
+      return res.status(409).send({ message: "Owner with this email already exists" });
     }
 
+    // Hash password
     const hashed_password = await bcrypt.hash(value.password, 10);
+
+    // Generate activation link
     const activation_link = uuid.v4();
-    const newClient = await Owner.create({
+
+    // Create new owner
+    const newOwner = await Owner.create({
       full_name: value.full_name,
       email: value.email,
       phone: value.phone,
       hashed_password,
-      created_at: new Date().toISOString(),
       is_active: false,
       activation_link,
+      created_at: new Date(),
     });
-    const link = `${config.get(
-      "api_url"
-    )}/api/owner/activate/${activation_link}`;
-    await mailService.sendMail(value.email, link);
 
-    res.status(201).send({ message: "Owner created successfully", newClient });
+    // Build activation URL
+    const activationUrl = `${config.get("api_url")}/api/owner/activate/${activation_link}`;
+
+    // Send activation email
+    await mailService.sendMail(value.email, activationUrl);
+
+    res.status(201).send({
+      message: "Owner created successfully. Please check your email to activate your account.",
+      owner: {
+        id: newOwner.id,
+        full_name: newOwner.full_name,
+        email: newOwner.email,
+        phone: newOwner.phone,
+        is_active: newOwner.is_active,
+      },
+    });
+
   } catch (error) {
     sendErrorResponse(error, res, 400);
   }

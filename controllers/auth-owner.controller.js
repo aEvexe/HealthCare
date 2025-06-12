@@ -34,6 +34,7 @@ const login = async (req, res) => {
     const payload = {
       id: owner.id,
       email: owner.email,
+      role: "owner"
     };
 
     const tokens = OwnerJwtServicee.generateToken(payload);

@@ -11,6 +11,7 @@ const ServiceCat = sequelize.define(
     },
     name: {
       type: DataTypes.STRING(50),
+      unique: true
     },
     desc: {
       type: DataTypes.STRING(100), 

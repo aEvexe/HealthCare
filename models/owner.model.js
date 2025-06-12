@@ -40,11 +40,11 @@ const Owner = sequelize.define(
       unique: true,
     },
     created_at: {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
     },
 
   },
-  { freezeTableName: true, timestamps: false }
+  { freezeTableName: true, timestamps: false } 
 );
 
 module.exports = Owner;

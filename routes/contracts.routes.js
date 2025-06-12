@@ -7,11 +7,12 @@ const {
   updateContract,
   deleteContract,
 } = require("../controllers/contracts.controller");
+const adminJwtGuard = require("../middlewares/guards/admin.jwt.guard");
 
 router.post("/", createContract);
-router.get("/", getAllContracts);
-router.get("/:id", getContractById);
-router.put("/:id", updateContract);
+router.get("/", /*adminJwtGuard,*/  getAllContracts);
+router.get("/:id", adminJwtGuard, getContractById);
+router.put("/:id", adminJwtGuard, updateContract);
 router.delete("/:id", deleteContract)
 
 module.exports = router;
